@@ -1,0 +1,2 @@
+An automatic text summarizer.
+
