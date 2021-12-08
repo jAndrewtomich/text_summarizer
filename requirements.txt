@@ -1,7 +1,15 @@
 beautifulsoup4==4.10.0
 bs4==0.0.1
-gensim==4.1.2
+certifi==2021.10.8
+charset-normalizer==2.0.9
+gensim==3.8.0
+idna==3.3
+lxml==4.6.4
 numpy==1.21.4
+python-dotenv==0.19.2
+requests==2.26.0
 scipy==1.7.3
+six==1.16.0
 smart-open==5.2.1
 soupsieve==2.3.1
+urllib3==1.26.7
