@@ -1,8 +1,14 @@
 import funcs # import our functions
 import os # filesystem and environment variables
 import datetime # system time for record keeping
-from dotenv import load_dotenv # load environment variables
-load_dotenv() #   -   -   -   -   -   -   -   -   -   -   |
+
+import smtplib # sending and formatting email    - | 
+from email.mime.multipart import MIMEMultipart # - |
+from email.mime.text import MIMEText #  -  -  -  - |
+
+from dotenv import load_dotenv # load environment variables  - |
+load_dotenv() #   -   -   -   -   -   -   -   -   -   -   -  - |
+
 
 def main():
     now = datetime.datetime.now()
@@ -12,6 +18,29 @@ def main():
     content += cnt
     content += ("<br>------<br>")
     content += ("<br><br>End of Message")
+
+    """
+    send the email
+    """
+    msg = MIMEMultipart()
+    msg["Subject"] = f"Top News Stories [Automated Email] {str(now.month)}-{str(now.day)}-{str(now.year)}"
+    msg["From"] = os.environ["FROM"]
+    msg["To"] = os.environ["TO"]
+
+    msg.attach(MIMEText(content, "html"))
+
+    print("Initializing Server...")
+
+    server = smtplib.SMTP(os.environ["MAIL_SERVER"], os.environ["MAIL_PORT"])
+    server.set_debuglevel(1)
+    server.ehlo()
+    server.starttls()
+    server.login(os.environ["FROM"], os.environ["MAIL_PW"])
+    server.sendmail(os.environ["FROM"], os.environ["TO"], msg.as_string())
+
+    print("Email Sent...")
+
+    server.quit()
 
     """
     get text from target url
