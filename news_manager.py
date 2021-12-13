@@ -24,7 +24,7 @@ class NewsManager():
 
     def summ(self):
         heading = f"Title : {self.title}\nSummary : "
-        summary = summarize(repr(self.text), ratio=0.1)
+        summary = summarize(repr(self.text), ratio=0.2)
 
         return heading + "\n" + summary
 

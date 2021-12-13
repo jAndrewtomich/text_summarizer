@@ -17,7 +17,7 @@ def main():
     email_m = EmailManager()
     #email_m.send_email(headlines)
     
-    news_m = NewsManager(url="https://www.voxmedia.com/2021/11/19/22791332/the-second-season-of-vox-and-vox-media-studios-the-mind-explained-premieres-today-on-netflix")
+    news_m = NewsManager()
 
     """
     display link text and text length
