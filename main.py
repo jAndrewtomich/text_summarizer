@@ -16,16 +16,14 @@ load_dotenv(dotenv_path)
 
 def main():
 
-    if len((args := sys.argv[1:])) >= 1:
-        if os.path.isfile(args[0]):
+    if len((args := sys.argv[1:])) >= 1: # check for command line arguments
+        if os.path.isfile(args[0]): # if arguments are present, check if first arg is filename.  If so, read contents of file as args.
             with open(args[0], 'r') as reader:
                 news_sites = reader.readlines()
         else:
-            news_sites = [a for a in args if validators.url(a)]
+            news_sites = [a for a in args if validators.url(a)] # urls can be presented as a space separated list at command line
     else:
-        news_sites = [None]
-
-    print(news_sites)
+        news_sites = [None] # default value
 
     if os.path.isfile("output.txt"): os.remove("output.txt") # remove any old copy of output to avoid duplicate information
 
