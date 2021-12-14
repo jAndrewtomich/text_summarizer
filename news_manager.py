@@ -13,22 +13,21 @@ class NewsManager():
             page = get(url)
             soup = BeautifulSoup(page.content, "lxml")
             text = ' '.join(map(lambda p: p.text.strip(), soup.find_all('p')))
-            title = ' '.join(soup.title.stripped_strings)
+            title = "Default Title" if not soup.title else ' '.join(soup.title.stripped_strings)
 
             return title, text
-
         title, text = get_only_text(url)
 
         self.title = title
         self.text = text
 
     def summ(self):
-        heading = f"Title : {self.title}\nSummary : "
+        heading = "Title : <b>" + self.title + "</b><br>Summary : <br>"
         summary = summarize(repr(self.text), ratio=0.2)
 
-        return f"{heading}{summary}\n"
+        return heading + summary
 
     def get_keyword_lemmas(self):
-        k_l_words = keywords(self.text, ratio=0.7, lemmatize=True)
+        k_l_words = keywords(self.text, ratio=0.2, lemmatize=True)
 
         return f"Keywords:\n{k_l_words}\n"
