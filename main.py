@@ -32,10 +32,9 @@ def main():
     for site in news_sites:
 
         headline_m = HeadlineManager() if not site else HeadlineManager(site.strip())
-        hlList = headline_m.extract_headlines()
 
-        for hl in hlList:
-            news_m = NewsManager(hl) if hl else NewsManager()
+        for hl in headline_m.hlList:
+            news_m = NewsManager(hl)
 
             """
             summarize text
@@ -50,6 +49,9 @@ def main():
             k_words = news_m.get_keyword_lemmas() # get lemmatized keywords
             with open("output.txt", 'a') as writer:
                 writer.write(k_words + "\n" + "<br>------<br>")
+
+            del news_m # cleanup memory
+        del headline_m # cleanup memory
 
     with open("output.txt", 'r') as reader: # concatenate output in order to send in single email
         full_text = reader.read()
