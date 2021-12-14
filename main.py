@@ -16,16 +16,21 @@ load_dotenv(dotenv_path)
 
 def main():
 
-    if len((args := sys.argv[1:])) > 1:
+    if len((args := sys.argv[1:])) >= 1:
         if os.path.isfile(args[0]):
             with open(args[0], 'r') as reader:
-                news_sites = str.split(reader.read())
+                news_sites = reader.readlines()
         else:
             news_sites = [a for a in args if validators.url(a)]
     else:
         news_sites = [None]
 
+    print(news_sites)
+
+    if os.path.isfile("output.txt"): os.remove("output.txt") # remove any old copy of output to avoid duplicate information
+
     for site in news_sites:
+
         headline_m = HeadlineManager() if not site else HeadlineManager(site.strip())
         hlList = headline_m.extract_headlines()
 
