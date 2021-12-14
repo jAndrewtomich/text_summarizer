@@ -17,7 +17,6 @@ pyOpenSSL==21.0.0
 python-dotenv==0.19.2
 requests==2.26.0
 scipy==1.7.3
-selenium==4.1.0
 six==1.16.0
 smart-open==5.2.1
 sniffio==1.2.0
