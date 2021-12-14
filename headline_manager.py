@@ -8,6 +8,7 @@ class HeadlineManager():
         self.url = url or os.environ["DEFAULT_HEADLINE_URL"]
 
     def extract_headlines(self):
+        hlList = []
         print("Extracting Stories ...")
         cnt = ""
         cnt += ("<b>Top Stories</b>\n" + "<br>" + '-' * 50 + "<br>")
@@ -17,5 +18,6 @@ class HeadlineManager():
 
         for i, tag in enumerate(soup.find_all("td", attrs={"class": "title", "valign": ""})):
             cnt += ((str(i + 1) + " :: " + tag.text + "\n" + "<br>") if tag.text != "More" else "")
+            hlList.append(tag.a["href"])
         
-        return f"{cnt}<br>------<br><br><br>End of Message"
+        return f"{cnt}<br>------<br><br><br>End of Message", hlList[:-1]
