@@ -26,9 +26,9 @@ class NewsManager():
         heading = f"Title : {self.title}\nSummary : "
         summary = summarize(repr(self.text), ratio=0.2)
 
-        return heading + "\n" + summary
+        return f"{heading}{summary}\n"
 
     def get_keyword_lemmas(self):
         k_l_words = keywords(self.text, ratio=0.7, lemmatize=True)
 
-        return f"\nKeywords:\n{k_l_words}"
+        return f"Keywords:\n{k_l_words}\n"
