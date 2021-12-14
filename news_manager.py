@@ -16,6 +16,7 @@ class NewsManager():
             title = "Default Title" if not soup.title else ' '.join(soup.title.stripped_strings)
 
             return title, text
+
         title, text = get_only_text(url)
 
         self.title = title
@@ -23,9 +24,12 @@ class NewsManager():
 
     def summ(self):
         heading = "Title : <b>" + self.title + "</b><br>Summary : <br>"
-        summary = summarize(repr(self.text), ratio=0.2)
 
-        return heading + summary
+        try:
+            summary = summarize(repr(self.text), ratio=0.2)
+            return heading + summary
+        except ValueError as e:
+            return "Text cannot be summarized: inappropriate structure.  Text must have more than one sentence."
 
     def get_keyword_lemmas(self):
         k_l_words = keywords(self.text, ratio=0.2, lemmatize=True)
