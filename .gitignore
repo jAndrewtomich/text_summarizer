@@ -3,5 +3,4 @@ venv
 __pycache__/
 input.txt
 output.txt
-requirements.local.txt
 .vscode/
