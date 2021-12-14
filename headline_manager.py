@@ -6,6 +6,7 @@ import os
 class HeadlineManager():
     def __init__(self, url=None):
         self.url = url or os.environ["DEFAULT_HEADLINE_URL"]
+        self.hlList = self.extract_headlines()
 
     def extract_headlines(self):
         hlList = []
