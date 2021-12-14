@@ -18,6 +18,9 @@ class HeadlineManager():
 
         for i, tag in enumerate(soup.find_all("td", attrs={"class": "title", "valign": ""})):
             #cnt += ((str(i + 1) + " :: " + tag.text + "\n" + "<br>") if tag.text != "More" else "")
-            hlList.append(tag.a["href"])
+            if (link_url := tag.a["href"])[:4] != "http":
+                link_url = "https://news.ycombinator.com/" + link_url
+            
+            hlList.append(link_url)
         
         return hlList[:-1]
