@@ -6,8 +6,28 @@ from gensim.summarization import keywords # get keywords from summary
 
 
 class NewsManager():
-    def __init__(self, url=None):
-        url = url or os.environ["DEFAULT_NEWS_URL"]
+    def __init__(self, offset=0, url=None):
+        self.url = url or os.environ["DEFAULT_HEADLINE_URL"]
+        self.offset = offset
+        self.hlList = self.extract_headlines()
+        self.stride = len(self.hlList)
+
+    def extract_headlines(self):
+        hlList = []
+        print("Extracting Stories ...")
+        response = get(self.url)
+        content = response.content
+        soup = BeautifulSoup(content, "lxml")
+
+        for tag in soup.find_all("td", attrs={"class": "title", "valign": ""}):
+            if (link_url := tag.a["href"])[:4] != "http":
+                link_url = "https://news.ycombinator.com/" + link_url
+            
+            hlList.append(link_url)
+        
+        return hlList[:-1]
+
+    def generate_summaries(self):
 
         def get_only_text(url):
             page = get(url)
@@ -17,21 +37,22 @@ class NewsManager():
 
             return title, text
 
-        title, text = get_only_text(url)
+        for i, hl in enumerate(self.hlList):
+            title, text = get_only_text(hl)
+            heading = f"Title : {title}\nSummary : \n"
+            k_l_words = keywords(text, ratio=0.2, lemmatize=True)
+            klw = f"Keywords:\n{k_l_words}\n"
 
-        self.title = title
-        self.text = text
+            try:
+                summary = summarize(repr(text), ratio=0.2)
+            except ValueError as e:
+                summary = "Inadequate text structure.  This text cannot be summarized.  This is default text.  This might be summarized."
 
-    def summ(self):
-        heading = "Title : <b>" + self.title + "</b><br>Summary : <br>"
+            out = f"{heading}{summary}{klw}"
 
-        try:
-            summary = summarize(repr(self.text), ratio=0.2)
-            return heading + summary
-        except ValueError as e:
-            return "Text cannot be summarized: inappropriate structure.  Text must have more than one sentence."
-
-    def get_keyword_lemmas(self):
-        k_l_words = keywords(self.text, ratio=0.2, lemmatize=True)
-
-        return f"Keywords:\n{k_l_words}\n"
+            with open(f"output/output{i + (self.offset * self.stride)}.txt", 'w') as writer:
+                writer.write(out)
+            
+            if i == 29: return True
+        
+        return False
