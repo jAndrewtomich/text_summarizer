@@ -10,14 +10,11 @@ class HeadlineManager():
     def extract_headlines(self):
         hlList = []
         print("Extracting Stories ...")
-        #cnt = ""
-        #cnt += ("<b>Top Stories</b>\n" + "<br>" + '-' * 50 + "<br>")
         response = get(self.url)
         content = response.content
         soup = BeautifulSoup(content, "lxml")
 
-        for i, tag in enumerate(soup.find_all("td", attrs={"class": "title", "valign": ""})):
-            #cnt += ((str(i + 1) + " :: " + tag.text + "\n" + "<br>") if tag.text != "More" else "")
+        for tag in soup.find_all("td", attrs={"class": "title", "valign": ""}):
             if (link_url := tag.a["href"])[:4] != "http":
                 link_url = "https://news.ycombinator.com/" + link_url
             
