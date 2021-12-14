@@ -16,18 +16,14 @@ load_dotenv(dotenv_path)
 
 def main():
 
-    news_sites = [None]
-
-    if len((args := sys.argv)) > 1:
-        if os.path.isfile(args[1]):
-            with open(args[1], 'r') as reader:
+    if len((args := sys.argv[1:])) > 1:
+        if os.path.isfile(args[0]):
+            with open(args[0], 'r') as reader:
                 news_sites = str.split(reader.read())
-        elif validators.url(args[1]):
-            print("valid")
-            news_sites = [args[1]]
         else:
-            print("Error: Invalid arguments")
-            exit(1)
+            news_sites = [a for a in args if validators.url(a)]
+    else:
+        news_sites = [None]
 
     for site in news_sites:
         headline_m = HeadlineManager() if not site else HeadlineManager(site.strip())
