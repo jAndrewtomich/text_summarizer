@@ -12,7 +12,7 @@ class NewsManager():
         def get_only_text(url):
             page = get(url)
             soup = BeautifulSoup(page.content, "lxml")
-            text = ' '.join(map(lambda p: p.text, soup.find_all('p')))
+            text = ' '.join(map(lambda p: p.text.strip(), soup.find_all('p')))
             title = ' '.join(soup.title.stripped_strings)
 
             return title, text
