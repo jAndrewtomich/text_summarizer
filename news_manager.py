@@ -40,18 +40,18 @@ class NewsManager():
         for i, hl in enumerate(self.hlList):
             title, text = get_only_text(hl)
             heading = f"Title : {title}\nSummary : \n"
-            k_l_words = keywords(text, ratio=0.2, lemmatize=True)
+            k_l_words = keywords(text, ratio=0.1, lemmatize=True)
             klw = f"Keywords:\n{k_l_words}\n"
 
             try:
-                summary = summarize(repr(text), ratio=0.2)
+                summary = summarize(repr(text), ratio=0.1)
             except ValueError as e:
                 summary = "Inadequate text structure.  This text cannot be summarized.  This is default text.  This might be summarized."
 
-            out = f"{heading}{summary}{klw}"
+            out = [{"key": (i + (d := (self.offset * self.stride)))}, {"url": hl}, {"heading": heading}, {"summary": summary}, {"keywords": klw}]
 
-            with open(f"output/output{i + (self.offset * self.stride)}.txt", 'w') as writer:
-                writer.write(out)
+            with open(f"output/output{i + d}.json", 'w') as writer:
+                writer.write(str(out))
             
             if i == 29: return True
         
