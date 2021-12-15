@@ -1,5 +1,6 @@
 from requests import get # http 'get' requests
-import os
+import os # filesystem
+import io # text encoding
 from bs4 import BeautifulSoup # html parsing
 from gensim.summarization.summarizer import summarize # extractive text summarization
 from gensim.summarization import keywords # get keywords from summary
@@ -50,7 +51,7 @@ class NewsManager():
 
             out = f"{heading}*<>*{summary}*<>*{klw}*<>*{hl}"
 
-            with open(f"output/output{i + (self.offset * self.stride)}.json", 'w', 'utf-8') as writer:
+            with io.open(f"output/output{i + (self.offset * self.stride)}.json", 'w', encoding='utf-8-sig') as writer:
                 writer.write(out)
             
             if i == 29: return True
