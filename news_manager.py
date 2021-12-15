@@ -48,10 +48,10 @@ class NewsManager():
             except ValueError as e:
                 summary = "Inadequate text structure.  This text cannot be summarized.  This is default text.  This might be summarized."
 
-            out = {"key": str((i + (d := (self.offset * self.stride)))), "url": hl, "heading": heading, "summary": summary, "keywords": klw}
+            out = f"{heading}*<>*{summary}*<>*{klw}*<>*{hl}"
 
-            with open(f"output/output{i + d}.json", 'w') as writer:
-                writer.write(str(out))
+            with open(f"output/output{i + (self.offset * self.stride)}.json", 'w', 'utf-8') as writer:
+                writer.write(out)
             
             if i == 29: return True
         
