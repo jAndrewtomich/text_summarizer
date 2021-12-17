@@ -1,4 +1,5 @@
 from requests import get # http 'get' requests
+from requests.exceptions import ConnectionError as RqConnError
 import os # filesystem
 import io # text encoding
 from bs4 import BeautifulSoup # html parsing
@@ -31,25 +32,32 @@ class NewsManager():
     def generate_summaries(self):
 
         def get_only_text(url):
-            page = get(url)
-            soup = BeautifulSoup(page.content, "lxml")
-            text = ' '.join(map(lambda p: p.text.strip(), soup.find_all('p')))
-            title = "Default Title" if not soup.title else ' '.join(soup.title.stripped_strings)
+            try:
+                page = get(url)
+                soup = BeautifulSoup(page.content, "lxml")
+                text = ' '.join(map(lambda p: p.text.strip(), soup.find_all('p')))
+                title = "Default Title" if not soup.title else ' '.join(soup.title.stripped_strings)
+
+            except RqConnError as e:
+                title, text = None, e
 
             return title, text
 
         for i, hl in enumerate(self.hlList):
             title, text = get_only_text(hl)
-            heading = f"Title : {title}\nSummary : \n"
+            
+            if title is None:
+                print(f"Error : {hl} : {text}")
+                continue
+
             k_l_words = keywords(text, ratio=0.1, lemmatize=True)
-            klw = f"Keywords:\n{k_l_words}\n"
 
             try:
                 summary = summarize(repr(text), ratio=0.1)
             except ValueError as e:
                 summary = "Inadequate text structure.  This text cannot be summarized.  This is default text.  This might be summarized."
 
-            out = f"{heading}*<>*{summary}*<>*{klw}*<>*{hl}"
+            out = f"{title}*<>*{summary}*<>*{k_l_words}*<>*{hl}"
 
             with io.open(f"output/output{i + (self.offset * self.stride)}.json", 'w', encoding='utf-8-sig') as writer:
                 writer.write(out)
